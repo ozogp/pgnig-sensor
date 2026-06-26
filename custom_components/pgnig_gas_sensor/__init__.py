@@ -10,7 +10,7 @@ from homeassistant.config_entries import SOURCE_IMPORT
 from homeassistant.const import CONF_USERNAME, CONF_PASSWORD
 from homeassistant.helpers import entity_registry
 
-from .const import DOMAIN, CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD
+from .const import DOMAIN, CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD, CONF_ORLEN_SESSION
 from .PgnigApi import PgnigApi
 
 _LOGGER = logging.getLogger(__name__)
@@ -37,7 +37,8 @@ async def async_setup_entry(hass, config_entry):
     user = config_entry.data[CONF_USERNAME]
     password = config_entry.data[CONF_PASSWORD]
     auth_method = config_entry.data.get(CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD)
-    api = PgnigApi(user, password, auth_method)
+    session_data = config_entry.data.get(CONF_ORLEN_SESSION)
+    api = PgnigApi(user, password, auth_method, session_data=session_data)
     hass.data[DOMAIN][config_entry.entry_id] = api
 
     await hass.config_entries.async_forward_entry_setups(config_entry, ["sensor", "button"])
@@ -70,9 +71,13 @@ async def async_setup_entry(hass, config_entry):
 
 
 async def async_unload_entry(hass, config_entry):
-    if hass.services.async_has_service(DOMAIN, "refresh"):
+    if hass.services.has_service(DOMAIN, "refresh"):
         hass.services.async_remove(DOMAIN, "refresh")
     hass.data[DOMAIN].pop(config_entry.entry_id, None)
-    await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "button")
-    return True
+    unload_ok = True
+    for platform in ("sensor", "button"):
+        if not await hass.config_entries.async_forward_entry_unload(
+            config_entry, platform
+        ):
+            unload_ok = False
+    return unload_ok

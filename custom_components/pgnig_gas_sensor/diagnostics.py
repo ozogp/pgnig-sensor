@@ -8,14 +8,14 @@ from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD
+from .const import DOMAIN, CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD, CONF_ORLEN_SESSION
 from .PgnigApi import PgnigApi
 from .Invoices import InvoicesList
 from .PpgReadingForMeter import MeterReading
 
 _LOGGER = logging.getLogger(__name__)
 
-TO_REDACT = {"username", "password"}
+TO_REDACT = {"username", "password", CONF_ORLEN_SESSION, "token", "cookies"}
 
 
 async def async_get_config_entry_diagnostics(
@@ -27,7 +27,8 @@ async def async_get_config_entry_diagnostics(
     password = config_entry.data.get("password")
     auth_method = config_entry.data.get(CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD)
 
-    api = PgnigApi(username, password, auth_method)
+    session_data = config_entry.data.get(CONF_ORLEN_SESSION)
+    api = PgnigApi(username, password, auth_method, session_data=session_data)
 
     meters = await hass.async_add_executor_job(api.meterList)
     invoices = await hass.async_add_executor_job(api.invoices)

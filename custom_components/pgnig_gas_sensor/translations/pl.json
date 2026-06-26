@@ -6,7 +6,16 @@
         "title": "Wybierz metodę logowania",
         "description": "Wybierz jak logować się do swojego konta Orlen EBOK.",
         "data": {
-          "auth_method": "Metoda logowania"
+          "auth_method": "Metoda logowania",
+          "username": "Login",
+          "password": "Hasło"
+        }
+      },
+      "mfa": {
+        "title": "Wpisz kod MFA",
+        "description": "OrlenID wysłał kod weryfikacyjny na Twój telefon. Wpisz kod SMS, aby dokończyć logowanie.\n\n\n\n {error_info}",
+        "data": {
+          "mfa_code": "Kod SMS / MFA"
         }
       },
       "credentials": {
@@ -21,6 +30,7 @@
         "title": "Zaktualizuj dane logowania do Orlen EBOK",
         "description": "Twoje dane logowania są nieprawidłowe. Zaktualizuj je. \n\n\n\n {error_info}",
         "data": {
+          "auth_method": "Metoda logowania",
           "username": "Login",
           "password": "Hasło"
         }
@@ -36,7 +46,9 @@
       }
     },
     "error": {
-      "verify_connection_failed": "Logowanie nie powiodło się!"
+      "verify_connection_failed": "Logowanie nie powiodło się!",
+      "mfa_failed": "Nieprawidłowy lub wygasły kod MFA",
+      "mfa_session_expired": "Sesja MFA wygasła — zaloguj się ponownie hasłem, potem wpisz najnowszy kod SMS"
     },
     "abort": {
       "reauth_successful": "Dane logowania zaktualizowane pomyślnie",

@@ -18,7 +18,7 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from .Invoices import InvoicesList
 from .PgnigApi import PgnigApi
 from .PpgReadingForMeter import MeterReading
-from .const import CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
@@ -33,10 +33,7 @@ async def async_setup_entry(
         config_entry: ConfigEntry,
         async_add_entities,
 ):
-    user = config_entry.data[CONF_USERNAME]
-    password = config_entry.data[CONF_PASSWORD]
-    auth_method = config_entry.data.get(CONF_AUTH_METHOD, DEFAULT_AUTH_METHOD)
-    api = PgnigApi(user, password, auth_method)
+    api = hass.data[DOMAIN][config_entry.entry_id]
     try:
         pgps = await hass.async_add_executor_job(api.meterList)
     except Exception as err:

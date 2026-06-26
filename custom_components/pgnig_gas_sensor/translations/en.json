@@ -6,7 +6,16 @@
         "title": "Select login method",
         "description": "Choose how to log in to your Orlen EBOK account.",
         "data": {
-          "auth_method": "Login method"
+          "auth_method": "Login method",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "mfa": {
+        "title": "Enter MFA code",
+        "description": "OrlenID sent a verification code to your phone. Enter the SMS code to finish login.\n\n\n\n {error_info}",
+        "data": {
+          "mfa_code": "SMS / MFA code"
         }
       },
       "credentials": {
@@ -21,6 +30,7 @@
         "title": "Update credentials for Orlen EBOK",
         "description": "Your login credentials are invalid. Please update them. \n\n\n\n {error_info}",
         "data": {
+          "auth_method": "Login method",
           "username": "Username",
           "password": "Password"
         }
@@ -36,7 +46,9 @@
       }
     },
     "error": {
-      "verify_connection_failed": "Login failed!"
+      "verify_connection_failed": "Login failed!",
+      "mfa_failed": "Invalid or expired MFA code",
+      "mfa_session_expired": "MFA session expired — log in again with password, then enter the latest SMS code"
     },
     "abort": {
       "reauth_successful": "Credentials updated successfully",
